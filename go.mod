@@ -1,4 +1,4 @@
-module framework
+module github.com/lzzyuhyy/framework
 
 go 1.22.3
 
