@@ -3,6 +3,7 @@ module github.com/lzzyuhyy/framework
 go 1.22.3
 
 require (
+	github.com/aliyun/alibabacloud-oss-go-sdk-v2 v1.0.2
 	github.com/spf13/viper v1.19.0
 	google.golang.org/grpc v1.65.0
 	gorm.io/driver/mysql v1.5.7
@@ -31,6 +32,7 @@ require (
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
