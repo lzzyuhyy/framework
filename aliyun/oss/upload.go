@@ -7,15 +7,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	region   = viper.GetString("oss.region")
-	bucket   = viper.GetString("oss.bucket")
-	endpoint = viper.GetString("oss.endpoint")
-	ak       = viper.GetString("oss.ak")
-	sk       = viper.GetString("oss.sk")
-)
-
 func UploadFile(filename, path string) (string, error) {
+	region := viper.GetString("oss.region")
+	bucket := viper.GetString("oss.bucket")
+	endpoint := viper.GetString("oss.endpoint")
+	ak := viper.GetString("oss.ak")
+	sk := viper.GetString("oss.sk")
 	provider := credentials.NewStaticCredentialsProvider(ak, sk)
 
 	cfg := oss.LoadDefaultConfig().
