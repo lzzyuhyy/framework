@@ -1,6 +1,6 @@
 module github.com/lzzyuhyy/framework
 
-go 1.22.3
+go 1.22.0
 
 require (
 	github.com/aliyun/alibabacloud-oss-go-sdk-v2 v1.0.2
