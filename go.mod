@@ -1,6 +1,6 @@
 module github.com/lzzyuhyy/framework
 
-go 1.22.3
+go 1.22.0
 
 require (
 	github.com/aliyun/alibabacloud-oss-go-sdk-v2 v1.0.2
@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/elastic/go-elasticsearch/v7 v7.17.10 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
