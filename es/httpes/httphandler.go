@@ -3,6 +3,7 @@ package httpes
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/lzzyuhyy/framework/es"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -12,13 +13,13 @@ type R map[string]interface{}
 
 func HttpHandler(method, url string, body string) (R, error) {
 	r := &strings.Reader{}
-	if body == "" || body == "null" {
+	if method == es.GET_REQ {
 		r = nil
-	}
-
-	r = strings.NewReader(body)
-	if r == nil {
-		fmt.Println(1)
+	} else {
+		r = strings.NewReader(body)
+		if r != nil {
+			return nil, fmt.Errorf("system error")
+		}
 	}
 
 	request, err := http.NewRequest(method, url, r)
