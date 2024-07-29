@@ -9,14 +9,12 @@ import (
 
 func GetInfo(index string, id string, data R) (R, error) {
 	url := viper.GetString("es.addr") + "/"
-	if index == "" {
-		return nil, fmt.Errorf("params is not null")
-	} else {
-		url = url + index + "/_search"
-	}
-
-	if id != "" {
+	if index != "" && id != "" {
 		url = url + index + "/_doc/" + id
+	} else if index != "" && id == "" {
+		url = url + index + "/_search"
+	} else {
+		return nil, fmt.Errorf("params is not null")
 	}
 
 	marshal, err := json.Marshal(&data)
