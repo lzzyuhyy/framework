@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func newNacosClient() (string, error) {
+func NewNacosClient() (string, error) {
 	//create ServerConfig
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig(viper.GetString("nacos.address"), viper.GetUint64("nacos.port"), constant.WithContextPath("/nacos")),
