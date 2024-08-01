@@ -1,42 +1,51 @@
 package nacos
 
-// 发现服务
-//func RegisterServiceInstance() error {
-//	address := viper.GetString("nacos.address")
-//	port := viper.GetUint64("nacos.port")
-//	serverName := viper.GetString("nacos.servername")
-//	groupName := viper.GetString("nacos.group")
-//	cli, err := newNacosClient(address, port)
-//	if err != nil {
-//		panic(err)
-//	}
-//	success, err := (*cli).RegisterInstance(vo.RegisterInstanceParam{
-//		Ip:          address,
-//		Port:        port,
-//		ServiceName: serverName,
-//		GroupName:   groupName,
-//	})
-//
-//	if !success || err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
+import (
+	"github.com/lzzyuhyy/framework/utils/getipv4address"
+	"github.com/nacos-group/nacos-sdk-go/v2/model"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	"github.com/spf13/viper"
+)
+
+func RegisterServiceInstance() error {
+	cli, err := NewNamingClient()
+	if err != nil {
+		panic(err)
+	}
+
+	ip, err := getipv4address.GetLocalIPv4()
+	if err != nil {
+		return err
+	}
+	success, err := cli.RegisterInstance(vo.RegisterInstanceParam{
+		Ip:          ip,
+		Port:        viper.GetUint64("nacos.port"),
+		Enable:      true,
+		ServiceName: viper.GetString("nacos.servicename"),
+		GroupName:   viper.GetString("nacos.group"),
+	})
+
+	if !success || err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // 获取服务信息
-//func GetService() (model.Service, error) {
-//	address := viper.GetString("nacos.address")
-//	port := viper.GetUint64("nacos.port")
-//	serverName := viper.GetString("nacos.servername")
-//	groupName := viper.GetString("nacos.group")
-//	cli, err := newNacosClient(address, port)
-//	if err != nil {
-//		panic(err)
-//	}
-//
-//	return (*cli).GetService(vo.GetServiceParam{
-//		ServiceName: serverName,
-//		GroupName:   groupName, // 默认值DEFAULT_GROUP
-//	})
-//}
+func GetService() ([]model.Instance, error) {
+	cli, err := NewNamingClient()
+	if err != nil {
+		panic(err)
+	}
+
+	service, err := cli.GetService(vo.GetServiceParam{
+		ServiceName: viper.GetString("nacos.servicename"),
+		GroupName:   viper.GetString("nacos.group"),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return service.Hosts, nil
+}

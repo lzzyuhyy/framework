@@ -1,4 +1,4 @@
-package codec
+package base64
 
 import "encoding/base64"
 

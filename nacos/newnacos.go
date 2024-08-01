@@ -2,19 +2,17 @@ package nacos
 
 import (
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/spf13/viper"
-	"gopkg.in/yaml.v2"
 )
 
-func NewNacosClient() (string, error) {
-	//create ServerConfig
+func getConfig() vo.NacosClientParam {
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig(viper.GetString("nacos.address"), viper.GetUint64("nacos.port"), constant.WithContextPath("/nacos")),
 	}
 
-	//create ClientConfig
 	cc := *constant.NewClientConfig(
 		constant.WithNamespaceId(""),
 		constant.WithTimeoutMs(viper.GetUint64("nacos.timeout")),
@@ -24,11 +22,14 @@ func NewNacosClient() (string, error) {
 		constant.WithLogLevel(viper.GetString("nacos.logLevel")),
 	)
 
-	// 动态获取
-	configClient, err := clients.NewConfigClient(vo.NacosClientParam{
+	return vo.NacosClientParam{
 		ClientConfig:  &cc,
 		ServerConfigs: sc,
-	})
+	}
+}
+
+func GetConfig() (string, error) {
+	configClient, err := clients.NewConfigClient(getConfig())
 	if err != nil {
 		return "", err
 	}
@@ -39,26 +40,6 @@ func NewNacosClient() (string, error) {
 	})
 }
 
-type Config struct {
-	Mysql `yaml:"mysql"`
-}
-
-type Mysql struct {
-	Host   string `yaml:"host"`
-	Port   int64  `yaml:"port"`
-	User   string `yaml:"user"`
-	Pass   string `yaml:"pass"`
-	Dbname string `yaml:"dbname"`
-}
-
-var Conf Config
-
-func GetConfig() (*Config, error) {
-	config, err := NewNacosClient()
-	if err != nil {
-		return nil, err
-	}
-	err = yaml.Unmarshal([]byte(config), &Conf)
-
-	return &Conf, err
+func NewNamingClient() (naming_client.INamingClient, error) {
+	return clients.NewNamingClient(getConfig())
 }
