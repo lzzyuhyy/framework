@@ -49,3 +49,23 @@ func GetService() ([]model.Instance, error) {
 
 	return service.Hosts, nil
 }
+
+// 注销实例
+func DeRegistryInstance(port uint64, serviceName, group string) (bool, error) {
+	cli, err := NewNamingClient()
+	if err != nil {
+		panic(err)
+	}
+
+	ip, err := getipv4address.GetLocalIPv4()
+	if err != nil {
+		return false, err
+	}
+
+	return cli.DeregisterInstance(vo.DeregisterInstanceParam{
+		Ip:          ip,
+		Port:        port,
+		ServiceName: serviceName,
+		GroupName:   group, // 默认值DEFAULT_GROUP
+	})
+}
