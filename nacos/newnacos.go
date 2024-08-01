@@ -35,7 +35,7 @@ func NewNacosClient() (string, error) {
 
 	return configClient.GetConfig(vo.ConfigParam{
 		DataId: viper.GetString("nacos.dataID"),
-		Group:  viper.GetString("naocs.group"),
+		Group:  viper.GetString("nacos.group"),
 	})
 }
 
