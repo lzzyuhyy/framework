@@ -4,7 +4,6 @@ import (
 	"github.com/lzzyuhyy/framework/utils/getipv4address"
 	"github.com/nacos-group/nacos-sdk-go/v2/model"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	"github.com/spf13/viper"
 )
 
 func RegisterServiceInstance(port uint64, serviceName, group string) error {
@@ -33,15 +32,15 @@ func RegisterServiceInstance(port uint64, serviceName, group string) error {
 }
 
 // 获取服务信息
-func GetService() ([]model.Instance, error) {
+func GetService(serviceName, group string) ([]model.Instance, error) {
 	cli, err := NewNamingClient()
 	if err != nil {
 		panic(err)
 	}
 
 	service, err := cli.GetService(vo.GetServiceParam{
-		ServiceName: viper.GetString("nacos.servicename"),
-		GroupName:   viper.GetString("nacos.group"),
+		ServiceName: serviceName,
+		GroupName:   group,
 	})
 	if err != nil {
 		return nil, err
