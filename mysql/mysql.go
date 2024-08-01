@@ -2,19 +2,28 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
+	"github.com/lzzyuhyy/framework/nacos"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 // 提供链接mysql功能的组件---并在使用完之后断开链接
 func CreateMySQLClient(handler func(db *gorm.DB) error) error { // 闭包接收用户的sql操作
+
+	//dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
+	//	viper.GetString("mysql.user"),
+	//	viper.GetString("mysql.pass"),
+	//	viper.GetString("mysql.host"),
+	//	viper.GetString("mysql.port"),
+	//	viper.GetString("mysql.dbname"),
+	//)
+
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
-		viper.GetString("mysql.user"),
-		viper.GetString("mysql.pass"),
-		viper.GetString("mysql.host"),
-		viper.GetString("mysql.port"),
-		viper.GetString("mysql.dbname"),
+		nacos.Conf.Mysql.User,
+		nacos.Conf.Mysql.Pass,
+		nacos.Conf.Mysql.Host,
+		nacos.Conf.Mysql.Port,
+		nacos.Conf.Mysql.Dbname,
 	)
 	// 建立链接
 	cli, err := gorm.Open(mysql.Open(dsn))

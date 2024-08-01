@@ -51,14 +51,14 @@ type Mysql struct {
 	Dbname string `yaml:"dbname"`
 }
 
-var conf Config
+var Conf Config
 
 func GetConfig() (*Config, error) {
 	config, err := NewNacosClient()
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal([]byte(config), &conf)
+	err = yaml.Unmarshal([]byte(config), &Conf)
 
-	return &conf, err
+	return &Conf, err
 }
