@@ -5,6 +5,7 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
 )
 
 func NewNacosClient() (string, error) {
@@ -36,4 +37,26 @@ func NewNacosClient() (string, error) {
 		DataId: viper.GetString("nacos.dataID"),
 		Group:  viper.GetString("naocs.group"),
 	})
+}
+
+type Config struct {
+	Mysql `yaml:"mysql"`
+}
+
+type Mysql struct {
+	Host   string `yaml:"host"`
+	Port   int64  `yaml:"port"`
+	User   string `yaml:"user"`
+	Pass   string `yaml:"pass"`
+	Dbname string `yaml:"dbname"`
+}
+
+func GetConfig() (string, error) {
+	config, err := NewNacosClient()
+	if err != nil {
+		return "", nil
+	}
+	err = yaml.Unmarshal([]byte(config), &Config{})
+
+	return config, err
 }
