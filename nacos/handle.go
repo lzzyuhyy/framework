@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func RegisterServiceInstance() error {
+func RegisterServiceInstance(port uint64, serviceName, group string) error {
 	cli, err := NewNamingClient()
 	if err != nil {
 		panic(err)
@@ -19,10 +19,10 @@ func RegisterServiceInstance() error {
 	}
 	success, err := cli.RegisterInstance(vo.RegisterInstanceParam{
 		Ip:          ip,
-		Port:        viper.GetUint64("nacos.port"),
+		Port:        port,
 		Enable:      true,
-		ServiceName: viper.GetString("nacos.servicename"),
-		GroupName:   viper.GetString("nacos.group"),
+		ServiceName: serviceName,
+		GroupName:   group,
 	})
 
 	if !success || err != nil {
