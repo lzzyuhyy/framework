@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/lzzyuhyy/framework/nacos"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 	"gopkg.in/yaml.v2"
 	"log"
@@ -41,6 +43,10 @@ func RegisterGrpcService(port int64, server func(s *grpc.Server)) error {
 	}
 	//初始化grpc服务
 	s := grpc.NewServer()
+
+	healthcheck := health.NewServer()
+	healthgrpc.RegisterHealthServer(s, healthcheck)
+
 	server(s)
 	reflection.Register(s)
 	log.Printf("server listening at %v", lis.Addr())

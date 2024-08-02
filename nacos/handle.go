@@ -22,6 +22,7 @@ func RegisterServiceInstance(port uint64, serviceName, group string) error {
 		Enable:      true,
 		ServiceName: serviceName,
 		GroupName:   group,
+		Healthy:     true,
 	})
 
 	if !success || err != nil {
