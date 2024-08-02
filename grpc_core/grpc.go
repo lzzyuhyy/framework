@@ -17,7 +17,7 @@ type Config struct {
 type Service struct {
 	Name  string `yaml:"name"`
 	Port  uint64 `yaml:"port"`
-	group string `yaml:"group"`
+	Group string `yaml:"group"`
 }
 
 // 注册grpc服务
