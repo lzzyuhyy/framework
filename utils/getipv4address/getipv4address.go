@@ -6,21 +6,37 @@ import (
 )
 
 // get ip
-func GetLocalIPv4() (ip string, err error) {
-	addrList, err := net.InterfaceAddrs()
+func GetLocalIPv4() net.IP {
+	var ipAddr net.IP
+	interfaces, err := net.Interfaces()
 	if err != nil {
-		return ip, err
+		fmt.Println("Error:", err)
+		return nil
 	}
-	for _, addr := range addrList {
-		// 过滤掉回环地址
-		if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
-			ipv4 := ipNet.IP.To4()
-			// 如果ip不符合ipv4格式，继续查找下一个
-			if ipv4 == nil {
+
+	for _, i := range interfaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			if ip == nil || ip.IsLoopback() {
 				continue
 			}
-			return ipv4.String(), nil
+			// 只考虑IPv4地址
+			if i.Name == "以太网" {
+				ipAddr = ip
+			}
 		}
 	}
-	return ip, fmt.Errorf("not find ipv4 addr")
+
+	return ipAddr
 }
