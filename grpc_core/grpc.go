@@ -46,7 +46,7 @@ func RegisterGrpcService(port int64, server func(s *grpc.Server)) error {
 	log.Printf("server listening at %v", lis.Addr())
 
 	// 注册服务
-	err = nacos.RegisterServiceInstance(conf.Service.Port, conf.Service.Name, conf.Service.group)
+	err = nacos.RegisterServiceInstance(conf.Service.Port, conf.Service.Name, conf.Service.Group)
 	if err != nil {
 		return err
 	}
