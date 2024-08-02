@@ -1,7 +1,6 @@
 package nacos
 
 import (
-	"github.com/lzzyuhyy/framework/utils/getipv4address"
 	"github.com/nacos-group/nacos-sdk-go/v2/model"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
@@ -12,12 +11,8 @@ func RegisterServiceInstance(port uint64, serviceName, group string) error {
 		panic(err)
 	}
 
-	ip, err := getipv4address.GetLocalIPv4()
-	if err != nil {
-		return err
-	}
 	success, err := cli.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          ip,
+		Ip:          "127.0.0.1",
 		Port:        port,
 		Enable:      true,
 		ServiceName: serviceName,
@@ -57,13 +52,8 @@ func DeRegistryInstance(port uint64, serviceName, group string) (bool, error) {
 		panic(err)
 	}
 
-	ip, err := getipv4address.GetLocalIPv4()
-	if err != nil {
-		return false, err
-	}
-
 	return cli.DeregisterInstance(vo.DeregisterInstanceParam{
-		Ip:          ip,
+		Ip:          "127.0.0.1",
 		Port:        port,
 		ServiceName: serviceName,
 		GroupName:   group, // 默认值DEFAULT_GROUP
