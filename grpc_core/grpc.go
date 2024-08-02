@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/lzzyuhyy/framework/nacos"
 	"google.golang.org/grpc"
+	pb "google.golang.org/grpc/examples/features/proto/echo"
 	"google.golang.org/grpc/health"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
@@ -20,6 +21,10 @@ type Service struct {
 	Name  string `yaml:"name"`
 	Port  uint64 `yaml:"port"`
 	Group string `yaml:"group"`
+}
+
+type echoServer struct {
+	pb.UnimplementedEchoServer
 }
 
 // 注册grpc服务
@@ -46,6 +51,7 @@ func RegisterGrpcService(port int64, server func(s *grpc.Server)) error {
 
 	healthcheck := health.NewServer()
 	healthgrpc.RegisterHealthServer(s, healthcheck)
+	pb.RegisterEchoServer(s, &echoServer{})
 
 	server(s)
 	reflection.Register(s)
