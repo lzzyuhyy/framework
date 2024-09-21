@@ -5,21 +5,23 @@ import (
 	"net"
 )
 
-// get ip
-func GetLocalIPv4() net.IP {
-	var ipAddr net.IP
+func GetLocalIPv4() (net.IP, error) {
+	var wlanIP, ethernetIP net.IP
 	interfaces, err := net.Interfaces()
 	if err != nil {
-		fmt.Println("Error:", err)
-		return nil
+		return nil, err
 	}
 
 	for _, i := range interfaces {
+		if i.Flags&net.FlagUp == 0 || i.Flags&net.FlagLoopback != 0 {
+			continue // 跳过未激活和回环接口
+		}
+
 		addrs, err := i.Addrs()
 		if err != nil {
-			fmt.Println("Error:", err)
 			continue
 		}
+
 		for _, addr := range addrs {
 			var ip net.IP
 			switch v := addr.(type) {
@@ -28,15 +30,25 @@ func GetLocalIPv4() net.IP {
 			case *net.IPAddr:
 				ip = v.IP
 			}
-			if ip == nil || ip.IsLoopback() {
-				continue
-			}
-			// 只考虑IPv4地址
-			if i.Name == "WLAN" {
-				ipAddr = ip
+
+			if ip != nil && ip.To4() != nil { // 只考虑IPv4地址
+				fmt.Printf("%v: %v\n", i.Name, ip)
+				if i.Name == "WLAN" {
+					fmt.Println(1)
+					wlanIP = ip
+				} else if i.Name == "Ethernet" || i.Name == "以太网" {
+					fmt.Println(2)
+					ethernetIP = ip
+				}
 			}
 		}
 	}
 
-	return ipAddr
+	if wlanIP != nil {
+		return wlanIP, nil
+	}
+	if ethernetIP != nil {
+		return ethernetIP, nil
+	}
+	return nil, fmt.Errorf("%v", "No Used Public IP")
 }
